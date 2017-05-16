@@ -397,7 +397,7 @@ class Driver {
     const promise = new Promise((resolve, reject) => {
       const onIdle = () => {
         // eslint-disable-next-line no-use-before-define
-        this._networkStatusMonitor.once('network-2-busy', onBusy);
+        this._networkStatusMonitor.once('networkbusy', onBusy);
         idleTimeout = setTimeout(_ => {
           cancel();
           resolve();
@@ -405,17 +405,17 @@ class Driver {
       };
 
       const onBusy = () => {
-        this._networkStatusMonitor.once('network-2-idle', onIdle);
+        this._networkStatusMonitor.once('networkidle', onIdle);
         clearTimeout(idleTimeout);
       };
 
       cancel = () => {
         clearTimeout(idleTimeout);
-        this._networkStatusMonitor.removeListener('network-2-busy', onBusy);
-        this._networkStatusMonitor.removeListener('network-2-idle', onIdle);
+        this._networkStatusMonitor.removeListener('networkbusy', onBusy);
+        this._networkStatusMonitor.removeListener('networkidle', onIdle);
       };
 
-      if (this._networkStatusMonitor.is2Idle()) {
+      if (this._networkStatusMonitor.isIdle()) {
         onIdle();
       } else {
         onBusy();
