@@ -72,6 +72,7 @@ export class Launcher {
   private pollInterval: number = 500;
   private pidFile: string;
   private startingUrl: string;
+  private userDataDir: string;
   private TMP_PROFILE_DIR: string;
   private outFile?: number;
   private errFile?: number;
@@ -87,6 +88,7 @@ export class Launcher {
     this.startingUrl = defaults(opts.startingUrl, 'about:blank');
     this.chromeFlags = defaults(opts.chromeFlags, []);
     this.requestedPort = defaults(opts.port, 0);
+    this.userDataDir = defaults(opts.userDataDir, this.TMP_PROFILE_DIR);
     this.chromePath = opts.chromePath;
   }
 
@@ -94,7 +96,7 @@ export class Launcher {
     const flags = DEFAULT_FLAGS.concat([
       `--remote-debugging-port=${this.port}`,
       // Place Chrome profile in a custom location we'll rm -rf later
-      `--user-data-dir=${this.TMP_PROFILE_DIR}`
+      `--user-data-dir=${this.userDataDir}`
     ]);
 
     if (process.platform === 'linux') {
